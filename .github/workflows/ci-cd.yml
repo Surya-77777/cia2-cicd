@@ -1,3 +1,4 @@
+
 name: CIA 2 CI/CD Pipeline
 
 on:
@@ -65,3 +66,26 @@ jobs:
             surya020406/cia2-cicd:latest
             surya020406/cia2-cicd:v1
             surya020406/cia2-cicd:${{ github.sha }}
+
+  deploy-to-aws:
+    name: Deploy to AWS Kubernetes
+    runs-on: [self-hosted, Linux, X64]
+    needs: docker-publish
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 10
+
+    steps:
+      - name: Deploy new image to Kubernetes
+        run: |
+          sudo kubectl set image deployment/cia2-deployment \
+            cia2-container=surya020406/cia2-cicd:${GITHUB_SHA} \
+            -n cia2
+
+      - name: Wait for deployment rollout
+        run: |
+          sudo kubectl rollout status deployment/cia2-deployment \
+            -n cia2 --timeout=180s
+
+      - name: Verify deployment
+        run: |
+          sudo kubectl get deployments,pods,services -n cia2
