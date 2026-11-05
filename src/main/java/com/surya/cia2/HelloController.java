@@ -18,7 +18,7 @@ public class HelloController {
                              margin-top: 100px; background: #eef2ff;">
 
                     <h1>Welcome to CIA 2 Cloud CI/CD Project!</h1>
-                        <p>Version 2.0 - Automatically deployed through GitHub Actions!</p>
+                    <p>Version 2.0 - Automatically deployed through GitHub Actions!</p>
 
                     <h2>Hello, Surya!</h2>
 
